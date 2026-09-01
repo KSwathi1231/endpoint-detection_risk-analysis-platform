@@ -1,0 +1,37 @@
+# Python virtual environment
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Environment variables
+.env
+
+# Python cache
+*.pyc
+*.pyo
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Node modules
+frontend/node_modules/
+
+# Build files
+frontend/dist/
+frontend/build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Large datasets
+data/*.csv
+data/*.zip
+
+# ML experiment files (optional)
+*.log

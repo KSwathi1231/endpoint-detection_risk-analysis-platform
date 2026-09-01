@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+pymongo
+python-dotenv
+
+pandas
+numpy
+scikit-learn==1.6.1
+joblib
+
+psutil
+watchdog
+
+shap
+
+requests
+pydantic
