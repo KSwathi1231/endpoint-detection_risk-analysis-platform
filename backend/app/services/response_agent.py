@@ -70,13 +70,24 @@ class ResponseAgent:
                 "Investigate potentially coordinated attack activity"
             )
 
+        response_command = None
+
+        # Automated response is allowed only for HIGH or CRITICAL severity
+        if severity in ["HIGH", "CRITICAL"]:
+            response_command = {
+                "action": "TERMINATE_PROCESS",
+                "target_pid": None,
+                "target_process": None
+            }
+
         return {
             "response_priority": response_priority,
             "risk_score": risk_score,
             "recommended_actions": recommended_actions,
             "automation_status": self._get_automation_status(
                 severity
-            )
+            ),
+            "response_command": response_command
         }
 
     def _get_automation_status(self, severity):

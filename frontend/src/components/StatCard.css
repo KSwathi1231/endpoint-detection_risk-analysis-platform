@@ -1,0 +1,67 @@
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 22px;
+  border: 1px solid #e5e7eb;
+  min-height: 145px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.stat-title {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.stat-value {
+  font-size: 30px;
+  color: #111827;
+}
+
+.stat-subtitle {
+  margin-top: 15px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.stat-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Different card types */
+
+.primary .stat-icon {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.warning .stat-icon {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.danger .stat-icon {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.success .stat-icon {
+  background: #dcfce7;
+  color: #16a34a;
+}

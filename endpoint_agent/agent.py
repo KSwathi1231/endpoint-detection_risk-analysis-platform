@@ -1,25 +1,39 @@
 import time
 import json
 import requests
+import platform
+import socket
+import uuid
 from datetime import datetime
 
 from process_monitor import process_monitor
 from network_monitor import network_monitor
 from system_monitor import system_monitor
 from file_monitor import file_monitor
+from response_engine import ResponseEngine
 
 
 class EndpointAgent:
+    def __init__(self):
+        self.response_engine = ResponseEngine()
 
     def collect_endpoint_telemetry(self):
         """
         Collect and combine telemetry from all endpoint monitors.
         """
-
+        endpoint_info = self.get_endpoint_info()
+        print("\nENDPOINT INFO")
+        print(endpoint_info)
         # Process analysis
-        process_summary = process_monitor.get_process_summary()
+        # Collect process data only ONCE per telemetry cycle
+        processes = process_monitor.get_running_processes()
+
+        # Generate summary from the same snapshot
+        process_summary = process_monitor.get_process_summary(processes)
+
+        # Detect suspicious processes from the same snapshot
         suspicious_processes = (
-            process_monitor.detect_suspicious_processes()
+            process_monitor.detect_suspicious_processes(processes)
         )
 
         # Network analysis
@@ -42,6 +56,9 @@ class EndpointAgent:
         # Unified endpoint telemetry
         telemetry = {
             "timestamp": datetime.now().isoformat(),
+
+             "endpoint_info": endpoint_info,
+
 
             "process_monitor": {
                 "total_processes": process_summary[
@@ -100,6 +117,30 @@ class EndpointAgent:
             )
 
         return None
+    def get_endpoint_info(self):
+
+        hostname = socket.gethostname()
+
+        try:
+            ip_address = socket.gethostbyname(hostname)
+        except socket.gaierror:
+            ip_address = "Unknown"
+
+        endpoint_info = {
+            "endpoint_id": str(
+                uuid.uuid5(
+                    uuid.NAMESPACE_DNS,
+                    hostname
+                )
+            ),
+            "hostname": hostname,
+            "operating_system": platform.system(),
+            "os_version": platform.version(),
+            "architecture": platform.machine(),
+            "ip_address": ip_address
+        }
+
+        return endpoint_info
 
     def start(self):
         """
@@ -117,8 +158,19 @@ class EndpointAgent:
             time.sleep(2)
 
             telemetry = self.collect_endpoint_telemetry()
+
             backend_response = self.send_telemetry_to_backend(telemetry)
 
+            if backend_response:
+
+                analysis = backend_response.get("endpoint_analysis", {})
+
+                response_result = self.response_engine.execute_response(
+                    analysis
+                )
+
+                print("\nAUTOMATED RESPONSE:")
+                print(json.dumps(response_result, indent=4))
             print("=" * 60)
             print("UNIFIED ENDPOINT TELEMETRY REPORT")
             print("=" * 60)

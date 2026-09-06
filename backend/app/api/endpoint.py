@@ -21,3 +21,18 @@ def receive_endpoint_telemetry(telemetry: dict):
         "status": "success",
         "endpoint_analysis": result
     }
+@router.get("/latest")
+def get_latest_endpoint_analysis():
+
+    latest_analysis = endpoint_service.get_latest_analysis()
+
+    if latest_analysis is None:
+        return {
+            "status": "no_data",
+            "message": "No endpoint telemetry received yet"
+        }
+
+    return {
+        "status": "success",
+        "endpoint_analysis": latest_analysis
+    }
